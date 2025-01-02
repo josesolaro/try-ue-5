@@ -52,6 +52,8 @@ ASoulslikeCharacter::ASoulslikeCharacter()
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
+
+	this->CombatComponent = CreateDefaultSubobject<UCombatComponent>("CombatComponent");
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -85,6 +87,8 @@ void ASoulslikeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 
 		// Looking
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASoulslikeCharacter::Look);
+
+		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this->CombatComponent, &UCombatComponent::TargetLock);
 	}
 	else
 	{

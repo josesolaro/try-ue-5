@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "CombatComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "SoulslikeCharacter.generated.h"
@@ -43,6 +44,12 @@ class ASoulslikeCharacter : public ACharacter
 	/** Look Input Action */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LookAction;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* LockAction;
+
+	UPROPERTY(EditAnywhere, Blueprintable, Category = CustomComponents)
+	UCombatComponent* CombatComponent;
 
 public:
 	ASoulslikeCharacter();
