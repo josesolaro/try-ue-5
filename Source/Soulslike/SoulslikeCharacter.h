@@ -48,6 +48,9 @@ class ASoulslikeCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* LockAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* AttackAction;
+
 	UPROPERTY(EditAnywhere, Blueprintable, Category = CustomComponents)
 	UCombatComponent* CombatComponent;
 

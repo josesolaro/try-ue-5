@@ -89,6 +89,7 @@ void ASoulslikeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASoulslikeCharacter::Look);
 
 		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this->CombatComponent, &UCombatComponent::TargetLock);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this->CombatComponent, &UCombatComponent::Attack);
 	}
 	else
 	{

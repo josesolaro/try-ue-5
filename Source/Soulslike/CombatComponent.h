@@ -29,12 +29,26 @@ private:
 	AActor* _lockedTarget;
 	class UCharacterMovementComponent* _charMovementComponent;
 	UCameraComponent* _cameraComponent;
+	UAnimInstance* _animationInstance;
+	bool _isAttacking = false;
+	bool _continueCombo = false;
+
+	UFUNCTION()
+	void DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted);
+
+	UFUNCTION()
+	void AttackingNotified( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 	
 public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void TargetLock();
 
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void Attack();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float TargetLockDistance = 1000.0f;
-	
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	UAnimMontage* AttackMontage;
 };

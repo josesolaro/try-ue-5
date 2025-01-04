@@ -13,13 +13,16 @@ UCombatComponent::UCombatComponent()
 	PrimaryComponentTick.bCanEverTick = true;
 	// ...
 }
+
 void UCombatComponent::BeginPlay()
 {
 	this->_charMovementComponent = this->GetOwner()->GetComponentByClass<UCharacterMovementComponent>();
 	this->_cameraComponent = this->GetOwner()->GetComponentByClass<UCameraComponent>();
+	this->_animationInstance = this->GetOwner()->GetComponentByClass<USkeletalMeshComponent>()->GetAnimInstance();
 }
 
-void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
+                                     FActorComponentTickFunction* ThisTickFunction)
 {
 	if (this->_lockedTarget != nullptr)
 	{
@@ -29,7 +32,8 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 			this->_charMovementComponent->bUseControllerDesiredRotation = true;
 		}
 		this->_lockedTarget->GetComponentByClass<UWidgetComponent>()->SetVisibility(true);
-		FRotator newRotation = (this->_lockedTarget->GetActorLocation() - this->GetOwner()->GetActorLocation()).Rotation();
+		FRotator newRotation = (this->_lockedTarget->GetActorLocation() - this->GetOwner()->GetActorLocation()).
+			Rotation();
 		newRotation = newRotation.Add(-20, 0, 0);
 		this->GetOwner()->GetInstigatorController()->SetControlRotation(newRotation);
 	}
@@ -45,7 +49,7 @@ void UCombatComponent::TargetLock()
 
 		TArray<AActor*> actorsToIgnore;
 
-	
+
 		FVector start = this->GetOwner()->GetActorLocation();
 		FRotator actorRotation = this->_cameraComponent->GetComponentRotation();
 		actorRotation.SetComponentForAxis(EAxis::Y, 0);
@@ -58,9 +62,10 @@ void UCombatComponent::TargetLock()
 
 		FCollisionShape sphere = FCollisionShape::MakeSphere(50.0);
 
-		DrawDebugLine(GetWorld(),start, end, FColor::Red, false, 2);
-	
-		bool hit = GetWorld()->SweepSingleByChannel(hitResult, start, end, FQuat::Identity, ECC_GameTraceChannel1, sphere);
+		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2);
+
+		bool hit = GetWorld()->SweepSingleByChannel(hitResult, start, end, FQuat::Identity, ECC_GameTraceChannel1,
+		                                            sphere);
 		if (hit)
 		{
 			this->_lockedTarget = hitResult.GetActor();
@@ -73,6 +78,34 @@ void UCombatComponent::TargetLock()
 		this->_charMovementComponent->bOrientRotationToMovement = true;
 		this->_charMovementComponent->bUseControllerDesiredRotation = false;
 	}
-	
-	
+}
+
+void UCombatComponent::Attack()
+{
+	if (!_isAttacking)
+	{
+		this->_animationInstance->Montage_Play(this->AttackMontage);
+		this->_animationInstance->OnMontageEnded.AddUniqueDynamic(this, &UCombatComponent::DoneAttackingAnimationEnd);
+		this->_animationInstance->OnPlayMontageNotifyBegin.AddUniqueDynamic(this, &UCombatComponent::AttackingNotified);
+		_isAttacking = true;
+		this->_continueCombo = false;
+	}
+	else if (!this->_continueCombo)
+	{
+		this->_continueCombo = true;
+	}
+}
+
+void UCombatComponent::DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted)
+{
+	_isAttacking = false;
+}
+
+void UCombatComponent::AttackingNotified( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+{
+	if (!this->_continueCombo)
+	{
+		this->_animationInstance->Montage_Stop(1.0);
+	}
+	this->_continueCombo = false;
 }
