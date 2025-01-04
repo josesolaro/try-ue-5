@@ -2,7 +2,7 @@
 
 
 #include "CombatComponent.h"
-
+#include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
@@ -28,6 +28,7 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActo
 			this->_charMovementComponent->bOrientRotationToMovement = false;
 			this->_charMovementComponent->bUseControllerDesiredRotation = true;
 		}
+		this->_lockedTarget->GetComponentByClass<UWidgetComponent>()->SetVisibility(true);
 		FRotator newRotation = (this->_lockedTarget->GetActorLocation() - this->GetOwner()->GetActorLocation()).Rotation();
 		newRotation = newRotation.Add(-20, 0, 0);
 		this->GetOwner()->GetInstigatorController()->SetControlRotation(newRotation);
@@ -67,6 +68,7 @@ void UCombatComponent::TargetLock()
 	}
 	else
 	{
+		this->_lockedTarget->GetComponentByClass<UWidgetComponent>()->SetVisibility(false);
 		this->_lockedTarget = nullptr;
 		this->_charMovementComponent->bOrientRotationToMovement = true;
 		this->_charMovementComponent->bUseControllerDesiredRotation = false;
