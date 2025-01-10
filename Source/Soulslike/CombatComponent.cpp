@@ -2,6 +2,8 @@
 
 
 #include "CombatComponent.h"
+
+#include "TraceWeaponComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
@@ -18,6 +20,10 @@ void UCombatComponent::BeginPlay()
 {
 	this->_charMovementComponent = this->GetOwner()->GetComponentByClass<UCharacterMovementComponent>();
 	this->_cameraComponent = this->GetOwner()->GetComponentByClass<UCameraComponent>();
+
+	TArray<AActor*> Overlaps;
+	this->_weapon = this->GetOwner()->GetComponentByClass<UTraceWeaponComponent>();
+	
 	this->_animationInstance = this->GetOwner()->GetComponentByClass<USkeletalMeshComponent>()->GetAnimInstance();
 }
 
@@ -89,6 +95,8 @@ void UCombatComponent::Attack()
 		this->_animationInstance->OnPlayMontageNotifyBegin.AddUniqueDynamic(this, &UCombatComponent::AttackingNotified);
 		_isAttacking = true;
 		this->_continueCombo = false;
+
+		GetWorld()->GetTimerManager().SetTimer(this->_attackTraceTimer,this, &UCombatComponent::TraceWeaponForContact, this->AttackTraceTimerRate, true);
 	}
 	else if (!this->_continueCombo)
 	{
@@ -99,6 +107,7 @@ void UCombatComponent::Attack()
 void UCombatComponent::DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted)
 {
 	_isAttacking = false;
+	GetWorld()->GetTimerManager().ClearTimer(this->_attackTraceTimer);
 }
 
 void UCombatComponent::AttackingNotified( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
@@ -108,4 +117,14 @@ void UCombatComponent::AttackingNotified( FName NotifyName, const FBranchingPoin
 		this->_animationInstance->Montage_Stop(1.0);
 	}
 	this->_continueCombo = false;
+}
+
+void UCombatComponent::TraceWeaponForContact()
+{
+	FHitResult hitResult;
+	this->_weapon->GetHitted(hitResult);
+	if (hitResult.GetActor() != nullptr)
+	{
+		UE_LOG(LogTemp, Display, TEXT("%s"), *hitResult.GetActor()->GetName());
+	}
 }

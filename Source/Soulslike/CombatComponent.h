@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "TraceWeaponComponent.h"
 #include "Camera/CameraComponent.h"
 #include "Components/ActorComponent.h"
 #include "CombatComponent.generated.h"
@@ -32,12 +33,17 @@ private:
 	UAnimInstance* _animationInstance;
 	bool _isAttacking = false;
 	bool _continueCombo = false;
+	FTimerHandle _attackTraceTimer;
+	UTraceWeaponComponent* _weapon;
 
 	UFUNCTION()
 	void DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted);
 
 	UFUNCTION()
 	void AttackingNotified( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+
+	UFUNCTION()
+	void TraceWeaponForContact();
 	
 public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
@@ -51,4 +57,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	float AttackTraceTimerRate = 0.5f;
 };
