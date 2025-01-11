@@ -92,11 +92,13 @@ void UCombatComponent::Attack()
 	{
 		this->_animationInstance->Montage_Play(this->AttackMontage);
 		this->_animationInstance->OnMontageEnded.AddUniqueDynamic(this, &UCombatComponent::DoneAttackingAnimationEnd);
-		this->_animationInstance->OnPlayMontageNotifyBegin.AddUniqueDynamic(this, &UCombatComponent::AttackingNotified);
+		
+		this->_animationInstance->OnPlayMontageNotifyBegin.AddUniqueDynamic(this, &UCombatComponent::AttackingNotifiedBegin);
+
 		_isAttacking = true;
 		this->_continueCombo = false;
 
-		GetWorld()->GetTimerManager().SetTimer(this->_attackTraceTimer,this, &UCombatComponent::TraceWeaponForContact, this->AttackTraceTimerRate, true);
+		
 	}
 	else if (!this->_continueCombo)
 	{
@@ -107,20 +109,38 @@ void UCombatComponent::Attack()
 void UCombatComponent::DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted)
 {
 	_isAttacking = false;
-	GetWorld()->GetTimerManager().ClearTimer(this->_attackTraceTimer);
 }
 
-void UCombatComponent::AttackingNotified( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
+void UCombatComponent::AttackingNotifiedBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload)
 {
-	if (!this->_continueCombo)
+	auto notifyPlainName = NotifyName.GetPlainNameString();
+	
+	if (notifyPlainName.Compare("Combo") == 0)
 	{
-		this->_animationInstance->Montage_Stop(1.0);
+		if (!this->_continueCombo)
+		{
+			this->_animationInstance->Montage_Stop(1.0);
+		}
+		this->_continueCombo = false;
 	}
-	this->_continueCombo = false;
+	else if (notifyPlainName.Compare("WeaponTrace") == 0)
+	{
+		if (!this->_weaponTracing)
+		{
+			this->_weaponTracing = true;
+			GetWorld()->GetTimerManager().SetTimer(this->_attackTraceTimer,this, &UCombatComponent::TraceWeaponForContact, this->AttackTraceTimerRate, true);
+		}
+		else
+		{
+			this->_weaponTracing = false;
+			GetWorld()->GetTimerManager().ClearTimer(this->_attackTraceTimer);
+		}
+	}
 }
 
 void UCombatComponent::TraceWeaponForContact()
 {
+	UE_LOG(LogTemp, Display, TEXT("Tracing"));
 	FHitResult hitResult;
 	this->_weapon->GetHitted(hitResult);
 	if (hitResult.GetActor() != nullptr)

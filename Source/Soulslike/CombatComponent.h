@@ -33,14 +33,16 @@ private:
 	UAnimInstance* _animationInstance;
 	bool _isAttacking = false;
 	bool _continueCombo = false;
+	bool _weaponTracing = false;
 	FTimerHandle _attackTraceTimer;
 	UTraceWeaponComponent* _weapon;
+	
 
 	UFUNCTION()
 	void DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted);
 
 	UFUNCTION()
-	void AttackingNotified( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+	void AttackingNotifiedBegin( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 
 	UFUNCTION()
 	void TraceWeaponForContact();
