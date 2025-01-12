@@ -3,8 +3,10 @@
 
 #include "CombatComponent.h"
 
+#include "ActorStats.h"
 #include "TraceWeaponComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Engine/DamageEvents.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
 // Sets default values for this component's properties
@@ -79,10 +81,7 @@ void UCombatComponent::TargetLock()
 	}
 	else
 	{
-		this->_lockedTarget->GetComponentByClass<UWidgetComponent>()->SetVisibility(false);
-		this->_lockedTarget = nullptr;
-		this->_charMovementComponent->bOrientRotationToMovement = true;
-		this->_charMovementComponent->bUseControllerDesiredRotation = false;
+		this->StopTargetLock();
 	}
 }
 
@@ -97,8 +96,6 @@ void UCombatComponent::Attack()
 
 		_isAttacking = true;
 		this->_continueCombo = false;
-
-		
 	}
 	else if (!this->_continueCombo)
 	{
@@ -123,28 +120,40 @@ void UCombatComponent::AttackingNotifiedBegin(FName NotifyName, const FBranching
 		}
 		this->_continueCombo = false;
 	}
-	else if (notifyPlainName.Compare("WeaponTrace") == 0)
+	else if (notifyPlainName.Compare("WeaponTraceStart") == 0)
 	{
-		if (!this->_weaponTracing)
-		{
-			this->_weaponTracing = true;
-			GetWorld()->GetTimerManager().SetTimer(this->_attackTraceTimer,this, &UCombatComponent::TraceWeaponForContact, this->AttackTraceTimerRate, true);
-		}
-		else
-		{
-			this->_weaponTracing = false;
-			GetWorld()->GetTimerManager().ClearTimer(this->_attackTraceTimer);
-		}
+		GetWorld()->GetTimerManager().SetTimer(this->_attackTraceTimer,this, &UCombatComponent::TraceWeaponForContact, this->AttackTraceTimerRate, true);
+	}
+	else if (notifyPlainName.Compare("WeaponTraceEnd") == 0){
+		this->StopTraceWeapon();
 	}
 }
 
 void UCombatComponent::TraceWeaponForContact()
 {
-	UE_LOG(LogTemp, Display, TEXT("Tracing"));
 	FHitResult hitResult;
 	this->_weapon->GetHitted(hitResult);
 	if (hitResult.GetActor() != nullptr)
 	{
-		UE_LOG(LogTemp, Display, TEXT("%s"), *hitResult.GetActor()->GetName());
+		this->StopTraceWeapon();
+		FDamageEvent damageEvent;
+		hitResult.GetActor()->TakeDamage(Damage, damageEvent,  this->GetOwner()->GetInstigatorController(), this->GetOwner());
+		if (hitResult.GetActor()->GetComponentByClass<UActorStats>()->GetHeath() <= 0)
+		{
+			this->StopTargetLock();
+		}
 	}
+}
+
+void UCombatComponent::StopTraceWeapon()
+{
+	GetWorld()->GetTimerManager().ClearTimer(this->_attackTraceTimer);
+}
+
+void UCombatComponent::StopTargetLock()
+{
+	this->_lockedTarget->GetComponentByClass<UWidgetComponent>()->SetVisibility(false);
+	this->_lockedTarget = nullptr;
+	this->_charMovementComponent->bOrientRotationToMovement = true;
+	this->_charMovementComponent->bUseControllerDesiredRotation = false;
 }

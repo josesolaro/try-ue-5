@@ -33,11 +33,13 @@ private:
 	UAnimInstance* _animationInstance;
 	bool _isAttacking = false;
 	bool _continueCombo = false;
-	bool _weaponTracing = false;
 	FTimerHandle _attackTraceTimer;
 	UTraceWeaponComponent* _weapon;
 	
 
+	void StopTraceWeapon();
+	void StopTargetLock();
+	
 	UFUNCTION()
 	void DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted);
 
@@ -62,4 +64,7 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float AttackTraceTimerRate = 0.5f;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	float Damage = 10.0f;
 };

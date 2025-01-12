@@ -54,6 +54,9 @@ ASoulslikeCharacter::ASoulslikeCharacter()
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
 	this->CombatComponent = CreateDefaultSubobject<UCombatComponent>("CombatComponent");
+	this->ActorStatsComponent = CreateDefaultSubobject<UActorStats>("ActorStatsComponent");
+
+	this->OnTakeAnyDamage.AddUniqueDynamic(this, &ASoulslikeCharacter::OnDamageTake);
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -131,4 +134,9 @@ void ASoulslikeCharacter::Look(const FInputActionValue& Value)
 		AddControllerYawInput(LookAxisVector.X);
 		AddControllerPitchInput(LookAxisVector.Y);
 	}
+}
+
+void ASoulslikeCharacter::OnDamageTake(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
+{
+	this->ActorStatsComponent->DecreaseHeath(Damage);
 }

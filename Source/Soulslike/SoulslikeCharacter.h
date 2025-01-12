@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "ActorStats.h"
 #include "CombatComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
@@ -54,9 +55,15 @@ class ASoulslikeCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Blueprintable, Category = CustomComponents)
 	UCombatComponent* CombatComponent;
 
+	UActorStats* ActorStatsComponent;
+
 public:
 	ASoulslikeCharacter();
-	
+
+
+private:
+	UFUNCTION()
+	void OnDamageTake(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
 protected:
 
