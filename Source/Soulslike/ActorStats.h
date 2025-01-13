@@ -30,5 +30,8 @@ public:
 	void IncreaseHeath(float value);
 	UFUNCTION(BlueprintCallable)
 	void DecreaseHeath(float value);
+	UFUNCTION(BlueprintCallable)
+	float GetPercentageHealt() const { return _health / _maxHealth;  };
+	
 	float GetHeath() const { return _health;  };
 };

@@ -152,8 +152,18 @@ void UCombatComponent::StopTraceWeapon()
 
 void UCombatComponent::StopTargetLock()
 {
-	this->_lockedTarget->GetComponentByClass<UWidgetComponent>()->SetVisibility(false);
-	this->_lockedTarget = nullptr;
+	if (_lockedTarget != nullptr)
+	{
+		for (auto component : this->_lockedTarget->GetComponents())
+		{
+			UWidgetComponent* widget = Cast<UWidgetComponent>(component);
+			if (widget != nullptr)
+			{
+				widget->SetVisibility(false);
+			}
+		}
+		this->_lockedTarget = nullptr;
+	}
 	this->_charMovementComponent->bOrientRotationToMovement = true;
 	this->_charMovementComponent->bUseControllerDesiredRotation = false;
 }
