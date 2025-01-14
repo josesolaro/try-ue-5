@@ -39,7 +39,14 @@ void UCombatComponent::TickComponent(float DeltaTime, ELevelTick TickType,
 			this->_charMovementComponent->bOrientRotationToMovement = false;
 			this->_charMovementComponent->bUseControllerDesiredRotation = true;
 		}
-		this->_lockedTarget->GetComponentByClass<UWidgetComponent>()->SetVisibility(true);
+		for (auto component : this->_lockedTarget->GetComponents())
+		{
+			UWidgetComponent* widget = Cast<UWidgetComponent>(component);
+			if (widget != nullptr)
+			{
+				widget->SetVisibility(true);
+			}
+		}
 		FRotator newRotation = (this->_lockedTarget->GetActorLocation() - this->GetOwner()->GetActorLocation()).
 			Rotation();
 		newRotation = newRotation.Add(-20, 0, 0);
