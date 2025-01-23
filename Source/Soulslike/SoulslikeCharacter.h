@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "ActorStats.h"
 #include "CombatComponent.h"
+#include "PlayerWidgetComponent.h"
+#include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
 #include "SoulslikeCharacter.generated.h"
@@ -57,10 +59,13 @@ class ASoulslikeCharacter : public ACharacter
 
 	UActorStats* ActorStatsComponent;
 
+	UPlayerWidgetComponent* PlayerWidgetComponent;
+	
+
 public:
 	ASoulslikeCharacter();
-
-
+	void BeginPlay() override;
+	
 private:
 	UFUNCTION()
 	void OnDamageTake(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);

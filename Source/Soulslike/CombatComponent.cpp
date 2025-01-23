@@ -20,6 +20,7 @@ UCombatComponent::UCombatComponent()
 
 void UCombatComponent::BeginPlay()
 {
+	Super::BeginPlay();
 	this->_charMovementComponent = this->GetOwner()->GetComponentByClass<UCharacterMovementComponent>();
 	this->_cameraComponent = this->GetOwner()->GetComponentByClass<UCameraComponent>();
 
@@ -145,6 +146,7 @@ void UCombatComponent::TraceWeaponForContact()
 		this->StopTraceWeapon();
 		FDamageEvent damageEvent;
 		hitResult.GetActor()->TakeDamage(Damage, damageEvent,  this->GetOwner()->GetInstigatorController(), this->GetOwner());
+
 		if (hitResult.GetActor()->GetComponentByClass<UActorStats>()->GetHeath() <= 0)
 		{
 			this->StopTargetLock();

@@ -17,6 +17,12 @@ UActorStats::UActorStats()
 
 }
 
+void UActorStats::BeginPlay()
+{
+	Super::BeginPlay();
+}
+
+
 void UActorStats::IncreaseHeath(float value)
 {
 	_health += value;
@@ -24,6 +30,7 @@ void UActorStats::IncreaseHeath(float value)
 	{
 		_health = _maxHealth;
 	}
+	OnHealthChange.Broadcast(_health/_maxHealth);
 }
 
 void UActorStats::DecreaseHeath(float value)
@@ -34,6 +41,7 @@ void UActorStats::DecreaseHeath(float value)
 	{
 		this->Die();
 	}
+	OnHealthChange.Broadcast(_health/_maxHealth);
 }
 
 void UActorStats::Die()

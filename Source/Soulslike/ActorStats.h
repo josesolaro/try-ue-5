@@ -3,9 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerWidgetComponent.h"
 #include "Components/ActorComponent.h"
 #include "ActorStats.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnHealthChange, float, percentaje);
 
 UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
 class SOULSLIKE_API UActorStats : public UActorComponent
@@ -17,6 +19,8 @@ public:
 	UActorStats();
 
 private:
+	UPlayerWidgetComponent* PlayerWidget;
+	
 	UPROPERTY(EditAnywhere)
 	float _maxHealth = 100;
 	UPROPERTY(EditAnywhere)
@@ -24,8 +28,13 @@ private:
 
 private:
 	void Die();
+	void BeginPlay() override;
 	
 public:
+	
+	UPROPERTY(BlueprintAssignable)
+	FOnHealthChange OnHealthChange;
+	
 	UFUNCTION(BlueprintCallable)
 	void IncreaseHeath(float value);
 	UFUNCTION(BlueprintCallable)

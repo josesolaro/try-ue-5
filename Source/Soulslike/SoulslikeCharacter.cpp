@@ -53,11 +53,20 @@ ASoulslikeCharacter::ASoulslikeCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	this->CombatComponent = CreateDefaultSubobject<UCombatComponent>("CombatComponent");
-	this->ActorStatsComponent = CreateDefaultSubobject<UActorStats>("ActorStatsComponent");
-
 	this->OnTakeAnyDamage.AddUniqueDynamic(this, &ASoulslikeCharacter::OnDamageTake);
 }
+
+void ASoulslikeCharacter::BeginPlay()
+{
+	Super::BeginPlay();
+
+	this->CombatComponent = FindComponentByClass<UCombatComponent>();
+	this->ActorStatsComponent = FindComponentByClass<UActorStats>();
+	this->PlayerWidgetComponent = FindComponentByClass<UPlayerWidgetComponent>();
+
+	SetupPlayerInputComponent(FindComponentByClass<UInputComponent>());
+}
+
 
 //////////////////////////////////////////////////////////////////////////
 // Input
