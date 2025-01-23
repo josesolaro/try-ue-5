@@ -62,7 +62,6 @@ void ASoulslikeCharacter::BeginPlay()
 
 	this->CombatComponent = FindComponentByClass<UCombatComponent>();
 	this->ActorStatsComponent = FindComponentByClass<UActorStats>();
-	this->PlayerWidgetComponent = FindComponentByClass<UPlayerWidgetComponent>();
 
 	SetupPlayerInputComponent(FindComponentByClass<UInputComponent>());
 }

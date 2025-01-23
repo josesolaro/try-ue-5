@@ -3,7 +3,6 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "PlayerWidgetComponent.h"
 #include "Components/ActorComponent.h"
 #include "ActorStats.generated.h"
 
@@ -19,8 +18,6 @@ public:
 	UActorStats();
 
 private:
-	UPlayerWidgetComponent* PlayerWidget;
-	
 	UPROPERTY(EditAnywhere)
 	float _maxHealth = 100;
 	UPROPERTY(EditAnywhere)

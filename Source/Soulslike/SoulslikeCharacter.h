@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "ActorStats.h"
 #include "CombatComponent.h"
-#include "PlayerWidgetComponent.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
@@ -58,9 +57,6 @@ class ASoulslikeCharacter : public ACharacter
 	UCombatComponent* CombatComponent;
 
 	UActorStats* ActorStatsComponent;
-
-	UPlayerWidgetComponent* PlayerWidgetComponent;
-	
 
 public:
 	ASoulslikeCharacter();
