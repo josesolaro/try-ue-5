@@ -4,6 +4,7 @@
 #include "CombatComponent.h"
 
 #include "ActorStats.h"
+#include "EnhancedInputComponent.h"
 #include "TraceWeaponComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Engine/DamageEvents.h"
@@ -92,6 +93,40 @@ void UCombatComponent::TargetLock()
 		this->StopTargetLock();
 	}
 }
+
+void UCombatComponent::Dodge()
+{
+
+	APlayerController* PlayerController = Cast<APlayerController>(GetOwner()->GetInstigatorController());
+	if (_animationInstance->IsAnyMontagePlaying())
+	{
+		return;
+	}
+	if (this->_lockedTarget == nullptr)
+	{
+		_animationInstance->Montage_Play(DodgeForwardMontage);
+	}
+	else
+	{
+		if (PlayerController->IsInputKeyDown(EKeys::W))
+		{
+			_animationInstance->Montage_Play(DodgeForwardMontage);
+		}
+		else if (PlayerController->IsInputKeyDown(EKeys::S))
+		{
+			_animationInstance->Montage_Play(DodgeBackMontage);
+		}
+		else if (PlayerController->IsInputKeyDown(EKeys::A))
+		{
+			_animationInstance->Montage_Play(DodgeLeftMontage);
+		}
+		else if (PlayerController->IsInputKeyDown(EKeys::D))
+		{
+			_animationInstance->Montage_Play(DodgeRigthMontage);
+		}
+	}
+}
+
 
 void UCombatComponent::Attack()
 {

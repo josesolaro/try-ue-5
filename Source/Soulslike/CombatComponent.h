@@ -56,15 +56,33 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void Attack();
 
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void Dodge();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float TargetLockDistance = 1000.0f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
-	UAnimMontage* AttackMontage;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float AttackTraceTimerRate = 0.5f;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float Damage = 10.0f;
+
+	//ANIMATIONS
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	UAnimMontage* AttackMontage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	UAnimMontage* DodgeForwardMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	UAnimMontage* DodgeBackMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	UAnimMontage* DodgeLeftMontage;
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
+	UAnimMontage* DodgeRigthMontage;
+	
 };
