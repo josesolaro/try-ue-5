@@ -75,18 +75,27 @@ void UCombatComponent::TargetLock()
 		lookAt = lookAt * this->TargetLockDistance;
 
 		FVector end = start + lookAt;
-		FHitResult hitResult;
+		TArray<FHitResult> hitResults;
 
 		FCollisionShape sphere = FCollisionShape::MakeSphere(50.0);
 
 		DrawDebugLine(GetWorld(), start, end, FColor::Red, false, 2);
 
-		bool hit = GetWorld()->SweepSingleByChannel(hitResult, start, end, FQuat::Identity, ECC_GameTraceChannel1,
+		bool hit = GetWorld()->SweepMultiByChannel(hitResults, start, end, FQuat::Identity, ECC_GameTraceChannel1,
 		                                            sphere);
+
 		if (hit)
 		{
-			this->_lockedTarget = hitResult.GetActor();
+			for (int i = 0; i < hitResults.Num(); i++)
+			{
+				if (hitResults[i].GetActor() != this->GetOwner())
+				{
+					this->_lockedTarget = hitResults[i].GetActor();
+					break;
+				}
+			}
 		}
+
 	}
 	else
 	{
@@ -176,12 +185,11 @@ void UCombatComponent::TraceWeaponForContact()
 {
 	FHitResult hitResult;
 	this->_weapon->GetHitted(hitResult);
-	if (hitResult.GetActor() != nullptr)
+	if (hitResult.GetActor() != nullptr && hitResult.GetActor() != this->GetOwner())
 	{
 		this->StopTraceWeapon();
 		FDamageEvent damageEvent;
 		hitResult.GetActor()->TakeDamage(Damage, damageEvent,  this->GetOwner()->GetInstigatorController(), this->GetOwner());
-
 		if (hitResult.GetActor()->GetComponentByClass<UActorStats>()->GetHeath() <= 0)
 		{
 			this->StopTargetLock();

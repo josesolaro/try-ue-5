@@ -36,7 +36,6 @@ void UActorStats::IncreaseHeath(float value)
 void UActorStats::DecreaseHeath(float value)
 {
 	_health -= value;
-	UE_LOG(LogTemp,Display,TEXT("Health = %f"),_health);
 	if (_health <= 0)
 	{
 		this->Die();

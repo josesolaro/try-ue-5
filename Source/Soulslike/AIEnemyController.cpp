@@ -21,7 +21,7 @@ void AAIEnemyController::BeginPlay()
 		_pawnSensingComp->OnSeePawn.AddUniqueDynamic(this, &AAIEnemyController::OnPawnSaw);
 		
 		_pawnSensingComp->bHearNoises = false;
-		_pawnSensingComp->SightRadius = 50000;
+		_pawnSensingComp->SightRadius = 500;
 		_pawnSensingComp->SensingInterval = 0.2f;
 		_pawnSensingComp->SetPeripheralVisionAngle(85.0f);
 	}

@@ -53,7 +53,7 @@ ASoulslikeCharacter::ASoulslikeCharacter()
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
 
-	this->OnTakeAnyDamage.AddUniqueDynamic(this, &ASoulslikeCharacter::OnDamageTake);
+
 }
 
 void ASoulslikeCharacter::BeginPlay()
@@ -64,6 +64,7 @@ void ASoulslikeCharacter::BeginPlay()
 	this->ActorStatsComponent = FindComponentByClass<UActorStats>();
 
 	SetupPlayerInputComponent(FindComponentByClass<UInputComponent>());
+	this->OnTakeAnyDamage.AddUniqueDynamic(this, &ASoulslikeCharacter::OnDamageTake);
 }
 
 
