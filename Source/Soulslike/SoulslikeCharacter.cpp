@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
+#include "AssetTypeActions/AssetDefinition_SoundBase.h"
+#include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -49,6 +51,8 @@ ASoulslikeCharacter::ASoulslikeCharacter()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName); // Attach the camera to the end of the boom and let the boom adjust to match the controller orientation
 	FollowCamera->bUsePawnControlRotation = false; // Camera does not rotate relative to arm
+
+	// DamageSound = CreateDefaultSubobject<USoundBase>(TEXT("DamageSound"));
 
 	// Note: The skeletal mesh and anim blueprint references on the Mesh component (inherited from Character) 
 	// are set in the derived blueprint asset named ThirdPersonCharacter (to avoid direct content references in C++)
@@ -148,5 +152,6 @@ void ASoulslikeCharacter::Look(const FInputActionValue& Value)
 
 void ASoulslikeCharacter::OnDamageTake(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
+	UGameplayStatics::PlaySoundAtLocation(GetWorld(), DamageSound, GetActorLocation());
 	this->ActorStatsComponent->DecreaseHeath(Damage);
 }

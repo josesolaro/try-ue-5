@@ -59,6 +59,9 @@ class ASoulslikeCharacter : public ACharacter
 	UPROPERTY(EditAnywhere, Blueprintable, Category = CustomComponents)
 	UCombatComponent* CombatComponent;
 
+	UPROPERTY(EditAnywhere)
+	USoundBase* DamageSound;
+	
 	UActorStats* ActorStatsComponent;
 
 public:

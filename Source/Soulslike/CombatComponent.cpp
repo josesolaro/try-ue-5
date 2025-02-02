@@ -142,6 +142,7 @@ void UCombatComponent::Attack()
 	if (!_isAttacking)
 	{
 		this->_animationInstance->Montage_Play(this->AttackMontage);
+
 		this->_animationInstance->OnMontageEnded.AddUniqueDynamic(this, &UCombatComponent::DoneAttackingAnimationEnd);
 		
 		this->_animationInstance->OnPlayMontageNotifyBegin.AddUniqueDynamic(this, &UCombatComponent::AttackingNotifiedBegin);
