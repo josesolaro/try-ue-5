@@ -49,3 +49,18 @@ void UActorStats::Die()
 	GetOwner()->GetComponentByClass<USkeletalMeshComponent>()->SetSimulatePhysics(true);
 }
 
+void UActorStats::IncreaseStamina(float value)
+{
+	_stamina += value;
+	if (_stamina > _maxStamina)
+	{
+		_stamina = _maxStamina;
+	}
+	OnStaminaChange.Broadcast(_stamina/_maxStamina);
+}	
+
+void UActorStats::DecreaseStamina(float value)
+{
+	_stamina -= value;
+	OnStaminaChange.Broadcast(_stamina/_maxStamina);
+}

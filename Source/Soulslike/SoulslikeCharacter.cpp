@@ -69,6 +69,9 @@ void ASoulslikeCharacter::BeginPlay()
 
 	SetupPlayerInputComponent(FindComponentByClass<UInputComponent>());
 	this->OnTakeAnyDamage.AddUniqueDynamic(this, &ASoulslikeCharacter::OnDamageTake);
+
+	StaminaDelegate.BindUFunction(this, FName("ReplenishStamina"));
+	GetWorldTimerManager().SetTimer(TimerHandle_StaminaDelay, StaminaDelegate, 2.0f, true);
 }
 
 
@@ -105,8 +108,8 @@ void ASoulslikeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(LookAction, ETriggerEvent::Triggered, this, &ASoulslikeCharacter::Look);
 
 		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this->CombatComponent, &UCombatComponent::TargetLock);
-		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this->CombatComponent, &UCombatComponent::Attack);
-		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Started, this->CombatComponent, &UCombatComponent::Dodge);
+		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ASoulslikeCharacter::Attack);
+		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Started, this, &ASoulslikeCharacter::Dodge);
 	}
 	else
 	{
@@ -155,3 +158,30 @@ void ASoulslikeCharacter::OnDamageTake(AActor* DamagedActor, float Damage, const
 	UGameplayStatics::PlaySoundAtLocation(GetWorld(), DamageSound, GetActorLocation());
 	this->ActorStatsComponent->DecreaseHeath(Damage);
 }
+
+void ASoulslikeCharacter::Attack()
+{
+	if (this->ActorStatsComponent->GetStamina() >= 10)
+	{
+		this->ActorStatsComponent->DecreaseStamina(10);
+		this->CombatComponent->Attack();
+	}
+}
+void ASoulslikeCharacter::Dodge()
+{
+	if (GetMesh()->GetAnimInstance()->IsAnyMontagePlaying())
+	{
+		return;
+	}
+	if (this->ActorStatsComponent->GetStamina() >= 20)
+	{
+		this->ActorStatsComponent->DecreaseStamina(20);
+		this->CombatComponent->Dodge();
+	}
+}
+
+void ASoulslikeCharacter::ReplenishStamina()
+{
+	this->ActorStatsComponent->IncreaseStamina(5);
+}
+

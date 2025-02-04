@@ -107,10 +107,6 @@ void UCombatComponent::Dodge()
 {
 
 	APlayerController* PlayerController = Cast<APlayerController>(GetOwner()->GetInstigatorController());
-	if (_animationInstance->IsAnyMontagePlaying())
-	{
-		return;
-	}
 	if (this->_lockedTarget == nullptr)
 	{
 		_animationInstance->Montage_Play(DodgeForwardMontage);

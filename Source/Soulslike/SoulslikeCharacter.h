@@ -72,6 +72,16 @@ private:
 	UFUNCTION()
 	void OnDamageTake(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
+	void Attack();
+	void Dodge();
+
+	UFUNCTION()
+	void ReplenishStamina();
+
+
+	FTimerHandle TimerHandle_StaminaDelay;
+	FTimerDelegate StaminaDelegate;
+
 protected:
 
 	/** Called for movement input */
