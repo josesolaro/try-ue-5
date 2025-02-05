@@ -54,7 +54,7 @@ public:
 	void TargetLock();
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
-	void Attack();
+	bool Attack();
 
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void Dodge();

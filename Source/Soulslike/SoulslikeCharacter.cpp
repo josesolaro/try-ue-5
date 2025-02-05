@@ -96,7 +96,7 @@ void ASoulslikeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 {
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(PlayerInputComponent)) {
-		
+		EnhancedInputComponent->ClearActionBindings();
 		// Jumping
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Started, this, &ACharacter::Jump);
 		EnhancedInputComponent->BindAction(JumpAction, ETriggerEvent::Completed, this, &ACharacter::StopJumping);
@@ -161,10 +161,9 @@ void ASoulslikeCharacter::OnDamageTake(AActor* DamagedActor, float Damage, const
 
 void ASoulslikeCharacter::Attack()
 {
-	if (this->ActorStatsComponent->GetStamina() >= 10)
+	if (this->ActorStatsComponent->GetStamina() >= 10 && this->CombatComponent->Attack())
 	{
 		this->ActorStatsComponent->DecreaseStamina(10);
-		this->CombatComponent->Attack();
 	}
 }
 void ASoulslikeCharacter::Dodge()

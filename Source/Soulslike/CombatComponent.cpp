@@ -133,7 +133,7 @@ void UCombatComponent::Dodge()
 }
 
 
-void UCombatComponent::Attack()
+bool UCombatComponent::Attack()
 {
 	if (!_isAttacking)
 	{
@@ -145,11 +145,15 @@ void UCombatComponent::Attack()
 
 		_isAttacking = true;
 		this->_continueCombo = false;
+		return true;
 	}
 	else if (!this->_continueCombo)
 	{
 		this->_continueCombo = true;
+		return true;
 	}
+
+	return false;
 }
 
 void UCombatComponent::DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted)
