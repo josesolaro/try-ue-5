@@ -132,10 +132,16 @@ void UCombatComponent::Dodge()
 	}
 }
 
+void UCombatComponent::WeaponAttached()
+{
+	_weaponAttached = true;
+	OnWeaponAttached.Broadcast();
+}
+
 
 bool UCombatComponent::Attack()
 {
-	if (!_isAttacking)
+	if (_weaponAttached && !_isAttacking)
 	{
 		this->_animationInstance->Montage_Play(this->AttackMontage);
 

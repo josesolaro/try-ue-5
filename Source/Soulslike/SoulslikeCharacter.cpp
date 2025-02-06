@@ -11,6 +11,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "InputActionValue.h"
 #include "AssetTypeActions/AssetDefinition_SoundBase.h"
+#include "Engine/SkeletalMeshSocket.h"
 #include "Kismet/GameplayStatics.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -66,6 +67,7 @@ void ASoulslikeCharacter::BeginPlay()
 
 	this->CombatComponent = FindComponentByClass<UCombatComponent>();
 	this->ActorStatsComponent = FindComponentByClass<UActorStats>();
+	SkeletalMesh = FindComponentByClass<USkeletalMeshComponent>();
 
 	SetupPlayerInputComponent(FindComponentByClass<UInputComponent>());
 	this->OnTakeAnyDamage.AddUniqueDynamic(this, &ASoulslikeCharacter::OnDamageTake);
@@ -183,4 +185,12 @@ void ASoulslikeCharacter::ReplenishStamina()
 {
 	this->ActorStatsComponent->IncreaseStamina(5);
 }
+
+void ASoulslikeCharacter::PickWeapon(AActor* weaponActor)
+{
+	weaponActor->GetComponentByClass<UCapsuleComponent>()->OnComponentBeginOverlap.Clear();
+	SkeletalMesh->GetSocketByName(TEXT("hand_rWeapon"))->AttachActor(weaponActor, SkeletalMesh);
+	CombatComponent->WeaponAttached();
+}
+
 

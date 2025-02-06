@@ -9,12 +9,14 @@
 #include "CombatComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnWeaponAttached);
+
+UCLASS(ClassGroup=(Custom), meta=(BlueprintSpawnableComponent))
 class SOULSLIKE_API UCombatComponent : public UActorComponent
 {
 	GENERATED_BODY()
 
-public:	
+public:
 	// Sets default values for this component's properties
 	UCombatComponent();
 
@@ -22,9 +24,10 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-public:	
+public:
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType,
+	                           FActorComponentTickFunction* ThisTickFunction) override;
 
 private:
 	AActor* _lockedTarget;
@@ -35,20 +38,21 @@ private:
 	bool _continueCombo = false;
 	FTimerHandle _attackTraceTimer;
 	UTraceWeaponComponent* _weapon;
-	
+	bool _weaponAttached = false;
+
 
 	void StopTraceWeapon();
 	void StopTargetLock();
-	
+
 	UFUNCTION()
 	void DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted);
 
 	UFUNCTION()
-	void AttackingNotifiedBegin( FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
+	void AttackingNotifiedBegin(FName NotifyName, const FBranchingPointNotifyPayload& BranchingPointPayload);
 
 	UFUNCTION()
 	void TraceWeaponForContact();
-	
+
 public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void TargetLock();
@@ -59,9 +63,13 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void Dodge();
 
+	void WeaponAttached();
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float TargetLockDistance = 1000.0f;
 
+	UPROPERTY(BlueprintAssignable)
+	FOnWeaponAttached OnWeaponAttached;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float AttackTraceTimerRate = 0.5f;
@@ -75,14 +83,13 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	UAnimMontage* DodgeForwardMontage;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	UAnimMontage* DodgeBackMontage;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	UAnimMontage* DodgeLeftMontage;
-	
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	UAnimMontage* DodgeRigthMontage;
-	
 };

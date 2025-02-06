@@ -61,13 +61,16 @@ class ASoulslikeCharacter : public ACharacter
 
 	UPROPERTY(EditAnywhere)
 	USoundBase* DamageSound;
+
+	USkeletalMeshComponent* SkeletalMesh;
+	bool _bWeaponAttached = false;
 	
 	UActorStats* ActorStatsComponent;
 
 public:
 	ASoulslikeCharacter();
 	void BeginPlay() override;
-	
+
 private:
 	UFUNCTION()
 	void OnDamageTake(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
@@ -78,6 +81,8 @@ private:
 	UFUNCTION()
 	void ReplenishStamina();
 
+	UFUNCTION(BlueprintCallable)
+	void PickWeapon(AActor* weaponActor);
 
 	FTimerHandle TimerHandle_StaminaDelay;
 	FTimerDelegate StaminaDelegate;
