@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "ActorStats.h"
 #include "CombatComponent.h"
+#include "IPicker.h"
 #include "Components/WidgetComponent.h"
 #include "GameFramework/Character.h"
 #include "Logging/LogMacros.h"
@@ -19,7 +20,7 @@ struct FInputActionValue;
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
 UCLASS(config=Game)
-class ASoulslikeCharacter : public ACharacter
+class ASoulslikeCharacter : public ACharacter, public IIPicker
 {
 	GENERATED_BODY()
 
@@ -81,8 +82,9 @@ private:
 	UFUNCTION()
 	void ReplenishStamina();
 
-	UFUNCTION(BlueprintCallable)
-	void PickWeapon(AActor* weaponActor, FName socket, float damage);
+	//virtual void PickWeapon(AActor* weaponActor, FName socket, float damage) override;
+
+	void PickWeapon_Implementation(AActor* weaponActor, FName socket, float damage);
 
 	FTimerHandle TimerHandle_StaminaDelay;
 	FTimerDelegate StaminaDelegate;
