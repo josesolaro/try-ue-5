@@ -186,11 +186,11 @@ void ASoulslikeCharacter::ReplenishStamina()
 	this->ActorStatsComponent->IncreaseStamina(5);
 }
 
-void ASoulslikeCharacter::PickWeapon(AActor* weaponActor)
+void ASoulslikeCharacter::PickWeapon(AActor* weaponActor, FName socket, float damage)
 {
 	weaponActor->GetComponentByClass<UCapsuleComponent>()->OnComponentBeginOverlap.Clear();
-	SkeletalMesh->GetSocketByName(TEXT("hand_rWeapon"))->AttachActor(weaponActor, SkeletalMesh);
-	CombatComponent->WeaponAttached();
+	SkeletalMesh->GetSocketByName(socket)->AttachActor(weaponActor, SkeletalMesh);
+	CombatComponent->WeaponAttached(damage);
 }
 
 

@@ -82,7 +82,7 @@ private:
 	void ReplenishStamina();
 
 	UFUNCTION(BlueprintCallable)
-	void PickWeapon(AActor* weaponActor);
+	void PickWeapon(AActor* weaponActor, FName socket, float damage);
 
 	FTimerHandle TimerHandle_StaminaDelay;
 	FTimerDelegate StaminaDelegate;

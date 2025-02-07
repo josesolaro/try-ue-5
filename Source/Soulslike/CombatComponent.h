@@ -39,6 +39,7 @@ private:
 	FTimerHandle _attackTraceTimer;
 	UTraceWeaponComponent* _weapon;
 	bool _weaponAttached = false;
+	float _damage = 0.0f;
 
 
 	void StopTraceWeapon();
@@ -63,7 +64,8 @@ public:
 	UFUNCTION(BlueprintCallable, Category="Combat")
 	void Dodge();
 
-	void WeaponAttached();
+	UFUNCTION(BlueprintCallable, Category="Combat")
+	void WeaponAttached(float damage);
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float TargetLockDistance = 1000.0f;
@@ -74,8 +76,7 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
 	float AttackTraceTimerRate = 0.5f;
 
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")
-	float Damage = 10.0f;
+	
 
 	//ANIMATIONS
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category="Combat")

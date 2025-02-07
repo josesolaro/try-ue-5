@@ -132,8 +132,9 @@ void UCombatComponent::Dodge()
 	}
 }
 
-void UCombatComponent::WeaponAttached()
+void UCombatComponent::WeaponAttached(float damage)
 {
+	_damage = damage;
 	_weaponAttached = true;
 	OnWeaponAttached.Broadcast();
 }
@@ -196,7 +197,7 @@ void UCombatComponent::TraceWeaponForContact()
 	{
 		this->StopTraceWeapon();
 		FDamageEvent damageEvent;
-		hitResult.GetActor()->TakeDamage(Damage, damageEvent,  this->GetOwner()->GetInstigatorController(), this->GetOwner());
+		hitResult.GetActor()->TakeDamage(_damage, damageEvent,  this->GetOwner()->GetInstigatorController(), this->GetOwner());
 		if (hitResult.GetActor()->GetComponentByClass<UActorStats>()->GetHeath() <= 0)
 		{
 			this->StopTargetLock();
