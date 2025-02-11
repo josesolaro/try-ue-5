@@ -57,6 +57,9 @@ class ASoulslikeCharacter : public ACharacter, public IIPicker
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
 	UInputAction* DodgeAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, meta = (AllowPrivateAccess = "true"))
+	UInputAction* PotionAction;
+
 	UPROPERTY(EditAnywhere, Blueprintable, Category = CustomComponents)
 	UCombatComponent* CombatComponent;
 
@@ -65,12 +68,19 @@ class ASoulslikeCharacter : public ACharacter, public IIPicker
 
 	USkeletalMeshComponent* SkeletalMesh;
 	bool _bWeaponAttached = false;
+
+	int _healthPotionCount = 5;
 	
 	UActorStats* ActorStatsComponent;
 
 public:
 	ASoulslikeCharacter();
 	void BeginPlay() override;
+
+	UFUNCTION(BlueprintCallable)
+	int GetPotionCount() { return _healthPotionCount; }
+	UFUNCTION(BlueprintCallable)
+	void UseHealthPotion();
 
 private:
 	UFUNCTION()

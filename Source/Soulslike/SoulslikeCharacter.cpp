@@ -112,6 +112,7 @@ void ASoulslikeCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInput
 		EnhancedInputComponent->BindAction(LockAction, ETriggerEvent::Started, this->CombatComponent, &UCombatComponent::TargetLock);
 		EnhancedInputComponent->BindAction(AttackAction, ETriggerEvent::Started, this, &ASoulslikeCharacter::Attack);
 		EnhancedInputComponent->BindAction(DodgeAction, ETriggerEvent::Started, this, &ASoulslikeCharacter::Dodge);
+		EnhancedInputComponent->BindAction(PotionAction, ETriggerEvent::Completed, this, &ASoulslikeCharacter::UseHealthPotion);
 	}
 	else
 	{
@@ -193,4 +194,13 @@ void ASoulslikeCharacter::PickWeapon_Implementation(AActor* weaponActor, FName s
 	CombatComponent->WeaponAttached(damage);
 }
 
+void ASoulslikeCharacter::UseHealthPotion()
+{
+	if (_healthPotionCount<=0)
+	{
+		return;
+	}
+	_healthPotionCount -= 1;
+	ActorStatsComponent->IncreaseHeath(20);
+}
 
