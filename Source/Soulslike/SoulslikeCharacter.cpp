@@ -73,7 +73,7 @@ void ASoulslikeCharacter::BeginPlay()
 	this->OnTakeAnyDamage.AddUniqueDynamic(this, &ASoulslikeCharacter::OnDamageTake);
 
 	StaminaDelegate.BindUFunction(this, FName("ReplenishStamina"));
-	GetWorldTimerManager().SetTimer(TimerHandle_StaminaDelay, StaminaDelegate, 2.0f, true);
+	GetWorldTimerManager().SetTimer(TimerHandle_StaminaDelay, StaminaDelegate, 0.5f, true);
 }
 
 

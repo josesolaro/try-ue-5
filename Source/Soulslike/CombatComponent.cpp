@@ -156,6 +156,7 @@ bool UCombatComponent::Attack()
 	}
 	else if (!this->_continueCombo)
 	{
+
 		this->_continueCombo = true;
 		return true;
 	}
@@ -165,6 +166,7 @@ bool UCombatComponent::Attack()
 
 void UCombatComponent::DoneAttackingAnimationEnd(UAnimMontage* montage, bool bInterrupted)
 {
+	_comboBoost = 1.0f;
 	_isAttacking = false;
 }
 
@@ -195,9 +197,10 @@ void UCombatComponent::TraceWeaponForContact()
 	this->_weapon->GetHitted(hitResult);
 	if (hitResult.GetActor() != nullptr && hitResult.GetActor() != this->GetOwner())
 	{
+		_comboBoost = _comboBoost * 1.1f;
 		this->StopTraceWeapon();
 		FDamageEvent damageEvent;
-		hitResult.GetActor()->TakeDamage(_damage, damageEvent,  this->GetOwner()->GetInstigatorController(), this->GetOwner());
+		hitResult.GetActor()->TakeDamage(_damage * _comboBoost, damageEvent,  this->GetOwner()->GetInstigatorController(), this->GetOwner());
 		if (hitResult.GetActor()->GetComponentByClass<UActorStats>()->GetHeath() <= 0)
 		{
 			this->StopTargetLock();

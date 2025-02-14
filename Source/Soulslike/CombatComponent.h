@@ -36,6 +36,7 @@ private:
 	UAnimInstance* _animationInstance;
 	bool _isAttacking = false;
 	bool _continueCombo = false;
+	float _comboBoost = 1.0f;
 	FTimerHandle _attackTraceTimer;
 	UTraceWeaponComponent* _weapon;
 	bool _weaponAttached = false;
